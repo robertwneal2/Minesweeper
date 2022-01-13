@@ -1,5 +1,5 @@
 require_relative "tile"
-require "byebug"
+require "colorize"
 
 class Board
 
@@ -32,20 +32,25 @@ class Board
     end
 
     def render
-        puts "  #{(0...@size).to_a.join(" ")}"
+        puts "  #{(0...@size).to_a.join(" ")}".colorize(:blue)
         @grid.each_with_index do |row, i|
-            row_str = "#{i}"
+            row_str = "#{i}".colorize(:blue)
             row.each do |tile|
                 reveal = tile.revealed
                 flagged = tile.flagged
                 if flagged == true
-                    new_char = "F"
+                    new_char = "F".colorize(:magenta)
                 elsif reveal == 0 #no bombs
                     new_char = "_"
                 elsif reveal #anything but nil or false
-                    new_char = "#{reveal}" #num bombs
+                    if reveal == "X"
+                        color = :red
+                    else
+                        color = :green
+                    end
+                    new_char = "#{reveal}".colorize(color) #num bombs
                 else
-                    new_char = "*" #not revealed
+                    new_char = "*".colorize(:yellow) #not revealed
                 end
                 row_str += " " + new_char
             end
@@ -81,10 +86,6 @@ class Board
 end
 
 if __FILE__ == $0
-    board1 = Board.new
-    board1.populate_grid
-    board1.render
-    p board1.grid[1][1]
-    bomb = board1.reveal([1,1])
-    board1.render
+    # p String.colors
+    p String.color_samples
 end
