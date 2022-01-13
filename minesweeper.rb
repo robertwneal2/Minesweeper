@@ -1,4 +1,4 @@
-require_relative "board.rb"
+require_relative "board"
 
 class Minesweeper
 

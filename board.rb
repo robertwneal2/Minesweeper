@@ -1,4 +1,4 @@
-require_relative "tile.rb"
+require_relative "tile"
 
 class Board
 
