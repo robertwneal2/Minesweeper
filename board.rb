@@ -5,8 +5,8 @@ class Board
 
     attr_reader :grid #remove after finished
 
-    def initialize
-        @size = 9
+    def initialize(size=9)
+        @size = size
         @grid = Array.new(@size) {Array.new}
         @num_bombs = @size + 1
     end
@@ -32,13 +32,39 @@ class Board
     end
 
     def render
+        puts "  #{(0...@size).to_a.join(" ")}"
+        @grid.each_with_index do |row, i|
+            row_str = "#{i}"
+            row.each do |tile|
+                reveal = tile.revealed
+                flagged = tile.flagged
+                if flagged == true
+                    new_char = "F"
+                elsif reveal == 0 #no bombs
+                    new_char = "_"
+                elsif reveal #anything but nil or false
+                    new_char = "#{reveal}" #num bombs
+                else
+                    new_char = "*" #not revealed
+                end
+                row_str += " " + new_char
+            end
+            puts row_str
+        end
         #prints the board
     end
+
+    # def reveal(pos)
+    #     row, col = pos
+    #     tile = @grid[row][col]
+    #     tile.reveal
+    # end
 
 end
 
 if __FILE__ == $0
     board1 = Board.new
     board1.populate_grid
-    p board1.grid[1][1].neighbor_bomb_count
+    board1.render
+    board1.reveal([1,1])
 end

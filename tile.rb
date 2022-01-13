@@ -29,7 +29,7 @@ class Tile
         true
     end
 
-    def flagged
+    def flag
         if @flagged == false
             @flagged = true
         else
