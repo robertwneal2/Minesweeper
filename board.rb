@@ -5,10 +5,10 @@ class Board
 
     attr_reader :grid #remove after finished
 
-    def initialize(size=9)
+    def initialize(size, num_bombs)
         @size = size
         @grid = Array.new(@size) {Array.new}
-        @num_bombs = @size + 1
+        @num_bombs = num_bombs
     end
 
     def populate_grid

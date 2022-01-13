@@ -3,13 +3,13 @@ require "byebug"
 
 class Minesweeper
 
-    def initialize(size=9)
+    def initialize(size = 9,num_bombs = 10)
         if !size.is_a?(Integer) || size < 2
             raise "Size must be a number more than 1"
         end
-        @board = Board.new(size)
         @size = size
-        @num_bombs = @size + 1
+        @num_bombs = num_bombs
+        @board = Board.new(@size, @num_bombs)
         @no_bomb = true
     end
 
@@ -42,7 +42,6 @@ class Minesweeper
     end
 
     def input_valid?(input)
-        # debugger
         nums = "0123456789"
 
         if input.length < 5
@@ -115,6 +114,8 @@ class Minesweeper
         else
             revealed_count = @board.revealed_count
             if revealed_count == @size*@size - @num_bombs
+                system("clear")
+                @board.render
                 puts "You win!"
                 return true
             end
@@ -125,5 +126,5 @@ class Minesweeper
 end
 
 if __FILE__ == $0
-    Minesweeper.new(2).play
+    Minesweeper.new(9, 10).play
 end

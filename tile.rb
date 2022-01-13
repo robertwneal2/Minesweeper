@@ -25,7 +25,6 @@ class Tile
         @revealed = self.neighbor_bomb_count
         
         if @revealed == 0
-            # debugger
             neighbors_arr = self.neighbors
             neighbors_arr.each do |tile|
                 tile.reveal
@@ -35,10 +34,12 @@ class Tile
     end
 
     def flag
-        if @flagged == false
-            @flagged = true
-        else
-            @flagged = false
+        if @revealed == false
+            if @flagged == false
+                @flagged = true
+            else
+                @flagged = false
+            end
         end
     end
 
@@ -47,12 +48,11 @@ class Tile
         end_row = @row + 1
         start_col = @col - 1
         end_col = @col + 1
-        # debugger
         neighbors_arr = []
         (start_row..end_row).each do |row|
             if row >= 0 && row < @board.size #skip rows out of grid
                 (start_col..end_col).each do |col|
-                    if col >= 0 && row < @board.size #skip col out of grid
+                    if col >= 0 && col < @board.size #skip col out of grid
                         if !(row == @row && col == @col) #skip current tile
                             neighbors_arr << @board[row][col]
                         end
@@ -65,9 +65,6 @@ class Tile
 
     def neighbor_bomb_count
         neighbors_arr = self.neighbors
-        if neighbors_arr == nil
-            debugger
-        end
         neighbors_arr.count { |tile| tile.bomb == true }
     end
 
