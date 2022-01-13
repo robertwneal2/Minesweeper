@@ -16,7 +16,25 @@ class Tile
     end
 
     def reveal 
-        #bomb 
+        return nil if @revealed == true 
+        return false if @bomb == true
+        @revealed = self.neighbor_bomb_count
+        
+        if @revealed == 0
+            neighbors_arr = self.neighbors
+            neighbors_arr.each do |tile|
+                tile.reveal
+            end
+        end
+        true
+    end
+
+    def flagged
+        if @flagged == false
+            @flagged = true
+        else
+            @flagged = false
+        end
     end
 
     def neighbors #lists all neighbors (up to 8)
