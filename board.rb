@@ -1,6 +1,9 @@
 require_relative "tile"
+require "byebug"
 
 class Board
+
+    attr_reader :grid #remove after finished
 
     def initialize
         @size = 9
@@ -9,11 +12,14 @@ class Board
     end
 
     def populate_grid
-        @grid.each do |row|
-            @size.times { row << Tile.new }
+        @grid.each_with_index do |row, row_index| #empty tiles
+            (0..@size-1).each do |col_index|
+                tile = Tile.new(@grid, row_index, col_index)
+                row << tile
+            end
         end
 
-        count = 0
+        count = 0 #add bombs to tiles
         while count < @num_bombs
             rand_row = rand(@size)
             rand_col = rand(@size)
@@ -25,4 +31,14 @@ class Board
         end
     end
 
+    def render
+        #prints the board
+    end
+
+end
+
+if __FILE__ == $0
+    board1 = Board.new
+    board1.populate_grid
+    p board1.grid[1][1].neighbor_bomb_count
 end
