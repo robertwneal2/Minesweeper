@@ -4,19 +4,39 @@ require "byebug"
 class Minesweeper
 
     def initialize(size=9)
+        if !size.is_a?(Integer) || size < 2
+            raise "Size must be a number more than 1"
+        end
         @board = Board.new(size)
         @size = size
         @num_bombs = @size + 1
-        @game_over = false
+        @no_bomb = true
     end
 
     def play
-        # debugger
-        while @game_over == false
-            puts "Enter pos (comma separated) followed by (space) R (for reveal) or F (for flag), ex: 1,1 R or 2,3 F"
+        @board.populate_grid
+        while game_over?(@no_bomb) == false
+            system("clear")
+            @board.render
+            puts "Enter pos (comma separated) followed by (space) r (for reveal) or f (for flag), ex: 1,1 r or 2,3 f"
             input = gets.chomp
             if input_valid?(input)
+                parsed_input = parse_input(input)
+                pos = parsed_input[0]
+                move = parsed_input[1]
+                if move == "r"
+                    @no_bomb = @board.reveal(pos)
+                elsif move == "f"
+                    @board.flag(pos)
+                end
 
+                if @no_bomb == false #render "X" on board when lose
+                    system("clear")
+                    @board.render
+                end
+
+            else
+                sleep(2) #sleep to see input error message
             end
         end
     end
@@ -79,12 +99,31 @@ class Minesweeper
         true
     end
 
-    def parse_input
+    def parse_input(input)
+        comma_index = input.index(",")
+        space_index = input.index(" ")
+        row = input[0...comma_index].to_i
+        col = input[comma_index+1...space_index].to_i
+        move = input[-1]
+        [[row,col],move.downcase]
+    end
 
+    def game_over?(no_bomb)
+        if no_bomb == false
+            puts "Bomb hit, you lose!"
+            return true
+        else
+            revealed_count = @board.revealed_count
+            if revealed_count == @size*@size - @num_bombs
+                puts "You win!"
+                return true
+            end
+        end
+        false
     end
 
 end
 
 if __FILE__ == $0
-    Minesweeper.new.play
+    Minesweeper.new(2).play
 end

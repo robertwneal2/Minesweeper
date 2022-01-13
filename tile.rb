@@ -16,8 +16,12 @@ class Tile
     end
 
     def reveal 
+        return nil if @flagged == true
         return nil if @revealed != false 
-        return false if @bomb == true
+        if @bomb == true
+            @revealed = "X"
+            return false
+        end
         @revealed = self.neighbor_bomb_count
         
         if @revealed == 0

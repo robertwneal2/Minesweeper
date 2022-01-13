@@ -60,7 +60,13 @@ class Board
         tile.reveal
     end
 
-    def unrevealed_count
+    def flag(pos)
+        row, col = pos
+        tile = @grid[row][col]
+        tile.flag
+    end
+
+    def revealed_count
         count = 0
         @grid.each do |row|
             row.each do |tile|
