@@ -54,11 +54,23 @@ class Board
         #prints the board
     end
 
-    # def reveal(pos)
-    #     row, col = pos
-    #     tile = @grid[row][col]
-    #     tile.reveal
-    # end
+    def reveal(pos)
+        row, col = pos
+        tile = @grid[row][col]
+        tile.reveal
+    end
+
+    def unrevealed_count
+        count = 0
+        @grid.each do |row|
+            row.each do |tile|
+                if tile.revealed != false
+                    count += 1
+                end
+            end
+        end
+        count
+    end
 
 end
 
@@ -66,5 +78,7 @@ if __FILE__ == $0
     board1 = Board.new
     board1.populate_grid
     board1.render
-    board1.reveal([1,1])
+    p board1.grid[1][1]
+    bomb = board1.reveal([1,1])
+    board1.render
 end

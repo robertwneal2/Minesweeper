@@ -16,11 +16,12 @@ class Tile
     end
 
     def reveal 
-        return nil if @revealed == true 
+        return nil if @revealed != false 
         return false if @bomb == true
         @revealed = self.neighbor_bomb_count
         
         if @revealed == 0
+            # debugger
             neighbors_arr = self.neighbors
             neighbors_arr.each do |tile|
                 tile.reveal
@@ -60,6 +61,9 @@ class Tile
 
     def neighbor_bomb_count
         neighbors_arr = self.neighbors
+        if neighbors_arr == nil
+            debugger
+        end
         neighbors_arr.count { |tile| tile.bomb == true }
     end
 
