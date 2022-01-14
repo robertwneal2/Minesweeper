@@ -169,4 +169,5 @@ end
 
 if __FILE__ == $0
     Minesweeper.new(9, 10).play
+    puts "testing"
 end
