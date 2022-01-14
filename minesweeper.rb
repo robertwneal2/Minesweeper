@@ -1,5 +1,6 @@
 require_relative "board"
 require "byebug"
+require "yaml"
 
 class Minesweeper
 
@@ -11,16 +12,30 @@ class Minesweeper
         @num_bombs = num_bombs
         @board = Board.new(@size, @num_bombs)
         @no_bomb = true
+        @game_start = false
     end
 
     def play
-        @board.populate_grid
+        if @game_start == false
+            @board.populate_grid
+            @game_start = true
+        end
         while game_over?(@no_bomb) == false
             system("clear")
             @board.render
-            puts "Enter pos (comma separated) followed by (space) r (for reveal) or f (for flag), ex: 1,1 r or 2,3 f"
+            puts "Enter pos (comma separated) followed by (space) r (for reveal) or f (for flag), ex: '1,1 r' or '2,3 f'. May also enter 'save', 'load', or exit"
             input = gets.chomp
-            if input_valid?(input)
+            if input.downcase == "save"
+                save_game
+                break
+            elsif input.downcase == "load"
+                load_game
+                break
+            elsif input.downcase == "exit"
+                system("clear")
+                puts "Thanks for playing!"
+                break
+            elsif input_valid?(input)
                 parsed_input = parse_input(input)
                 pos = parsed_input[0]
                 move = parsed_input[1]
@@ -121,6 +136,33 @@ class Minesweeper
             end
         end
         false
+    end
+
+    def save_game
+        save_file = self.to_yaml
+        puts "Enter game save name, ex: 'game 1'"
+        save_file_name = gets.chomp
+        File.open("save_games/#{save_file_name}.yml", "w") { |file| file.write(save_file) }
+        system("clear")
+        puts "Start a new game? Enter 'y' for a new game, 'load' to load a previous game, or anything else to stop playing"
+        new_game = gets.chomp
+        if new_game.downcase == "y"
+            Minesweeper.new.play
+        elsif new_game.downcase == "load"
+            load_game
+        else
+            system("clear")
+            puts "Thanks for playing!"
+        end
+    end
+
+    def load_game
+        system("clear")
+        puts "Enter game save name to load, ex: 'game 1'"
+        load_file_name = gets.chomp
+        #check if file exists
+        loaded_game = YAML.load(File.read("save_games/#{load_file_name.downcase}.yml"))
+        loaded_game.play
     end
 
 end
