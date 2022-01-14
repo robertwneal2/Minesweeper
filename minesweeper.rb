@@ -23,7 +23,7 @@ class Minesweeper
         while game_over?(@no_bomb) == false
             system("clear")
             @board.render
-            puts "Enter pos (comma separated) followed by (space) r (for reveal) or f (for flag), ex: '1,1 r' or '2,3 f'. May also enter 'save', 'load', or exit"
+            puts "Enter pos (comma separated) followed by (space) r (for reveal) or f (for flag), ex: '1,1 r' or '2,3 f'. May also enter 'save', 'load', or 'exit'"
             input = gets.chomp
             if input.downcase == "save"
                 save_game
